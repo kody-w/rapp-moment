@@ -1,4 +1,4 @@
-# Conformance — `rapp-moment/1.0`
+# Conformance — `rapp-moment/1.1`
 
 A conforming implementation **MUST** satisfy every clause below. Each maps to a section of
 [`SPEC.md`](SPEC.md). These are the rules an outside system agrees to in order to interoperate — to
@@ -24,6 +24,8 @@ A conforming implementation **MUST** satisfy every clause below. Each maps to a 
    the birth-proof. `STRESS_LIMIT = 12`.
 8. **Serverless (§10).** Static data + client-side queries. Introduce **no** backend, database, or account
    system as a condition of participation.
+9. **Unknown fields inert (§2, §11⅞).** Render the organism and **ignore record fields you don't recognize**
+   (e.g. `embed`); never fail or reject a Moment for carrying a trait you don't know. The schema is open.
 
 ## Addressing & identity (MUST)
 
@@ -40,6 +42,8 @@ A conforming implementation **MUST** satisfy every clause below. Each maps to a 
   dimension`) and an extensible `sources[]`.
 - Render the live hologram as an embeddable surface (an `<iframe>` whose `src` is `?m=`/`?dial=`), so the
   Moment is portable card art that loops its 100 frames.
+- Honor the **`embed`** trait (§11⅞): render a child Moment (or `"self"`) as an in-world portal, with a
+  **finite recursion depth cap**. The whole nesting travels in the token — the record is the link, all the way down.
 
 ## How to test
 

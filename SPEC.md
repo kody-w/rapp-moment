@@ -48,6 +48,7 @@ A Moment record:
 | `loc` | object? | `{lat,lng,place}` for place-bound (Pokémon-GO-style) Moments |
 | `sig` | hex? | ECDSA P-256 signature over the canonical body (§6) |
 | `pub` | JWK? | the signer's public key (the owner's identity) |
+| `embed` | string? | a child Moment **token** to nest inside this one, or `"self"` (§11⅞) |
 | `_id` | string? | lineage id (set only by a fork; §9.4) |
 | `_gen`, `_stress` | int? | local homeostasis metadata (§5) |
 
@@ -217,6 +218,16 @@ A rappid is a **gateway**. `Resolve.document(moment)` produces one standard docu
 
 `resolve.html?{m|id}=…` is the human + `?format=json` machine gateway, emitting OpenGraph/Twitter-player meta so public crawlers and marketplaces index it. The Moment becomes accessible to the full public marketplace with **zero servers** — a static document on the CDN, the live hologram one dial away.
 
+## 11⅞. Nested Moments (the `embed` trait)
+
+A Moment **MAY** carry an optional `embed` field — a child Moment's **share token** (the `base64url(JSON)` of §2, §11¾) — declaring that this Moment *contains* another. A player renders the host organism as usual and, if `embed` is present, opens the child **in-world** (e.g. a portal `<iframe src="?m=<embed>">`). Because the child is itself a Moment, it may embed another, and so on: the nesting is **recursive and data-driven — the entire tree travels inside the token**. The record is the link, all the way down: no server, no lookup, a whole stack of living worlds in one address.
+
+- **Self-reference.** `embed: "self"` means the Moment embeds **itself** — an infinite *hall of mirrors*. A player resolves `"self"` to the host Moment's own token.
+- **Composition, not identity.** `embed` is a content trait; it is **not** part of identity, the signed body, or the birth-proof, and is **not** required to reconstruct the organism. A coordinate-only summon (`?dial=<pk>`, §3) therefore renders the lone organism — the nesting lives in the `?m=<token>` record/link (§13). The token *is* the universe; the coordinate is just the seed.
+- **Backward-compatible by construction.** `embed` is an ordinary open-schema trait, so an implementation that doesn't know it **MUST** still render the host organism and simply ignore the field (§2). A nested Moment plays as a flat one in any older conformant client — nothing breaks.
+
+> **Normative:** an implementation that honors `embed` **MUST bound the recursion** with a finite depth cap — a Moment may legitimately embed itself or form a cycle, which is intentional but unbounded. It **MUST NOT** treat an unresolvable or malformed `embed` as a failure of the host: it renders the host and skips the portal.
+
 ## 12. Invariants (conformance)
 
 A conforming implementation **MUST**:
@@ -228,6 +239,7 @@ A conforming implementation **MUST**:
 5. Stay **drop-in serverless** — static data, client-side queries, no new server (§10).
 6. Read **all** historical record shapes; emit only canonical; never rewrite identity in place.
 7. Gate all growth by **weave + reconcile**; never let growth break homeostasis (§5).
+8. Treat **unknown record fields as inert** — render the organism and ignore them; if you honor `embed` (§11⅞), **bound the recursion** with a finite depth cap.
 
 ---
 
@@ -244,12 +256,13 @@ A conforming implementation **MUST**:
 | Market | `market.html` | ungameable leaderboard (distinct verified signers) |
 | Zoo Desk | `stats.html` | git-scraped data journalism |
 | Harness | `?dial=<pk>&{bio,grew,at,lineage}` | git-as-harness views |
+| Fractal | `fractal.html?m=<token>` · `?demo={chain,mirror}` | nested Moments — a world within a frame within a world (§11⅞) |
 
 ---
 
 ## 14. Glossary
 
-**Moment** — a 100-frame living hologram; a post; a moment in time. · **Organism** — what a Moment is. · **Genesis** — the immutable birth genome (no `u`). · **Grown frame** — fidelity added over time (has `u`). · **pk** — the spacetime primary key / address. · **Dial** — summon by address. · **Zookeeper** — a signing key = an identity. · **Seed (`.egg`)** — a portable Moment you plant. · **Homeostasis** — the survival law. · **Birth-proof** — `verifyCoordinate`. · **Harness** — git as the organism's control plane.
+**Moment** — a 100-frame living hologram; a post; a moment in time. · **Organism** — what a Moment is. · **Genesis** — the immutable birth genome (no `u`). · **Grown frame** — fidelity added over time (has `u`). · **pk** — the spacetime primary key / address. · **Dial** — summon by address. · **Zookeeper** — a signing key = an identity. · **Seed (`.egg`)** — a portable Moment you plant. · **Homeostasis** — the survival law. · **Birth-proof** — `verifyCoordinate`. · **Harness** — git as the organism's control plane. · **Embed / Nested Moment** — a Moment carrying a child token (§11⅞). · **Hall of Mirrors** — a Moment with `embed:"self"`.
 
 ---
 

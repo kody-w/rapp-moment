@@ -38,6 +38,14 @@ Resolving a Moment produces **one ERC-721/OpenSea-compatible document** whose `a
 **as card art in an `<iframe>`** that streams the record from a CDN and loops its 100 frames. Interop is
 the point: a Moment is a static document on raw CDN, the live hologram one dial away. See SPEC §11¾.
 
+## Nested Moments — worlds within worlds
+
+A Moment can carry an optional **`embed`** trait — a child Moment's token — so its hologram *contains* another
+Moment, played in-world. The child can embed another, and `embed:"self"` makes a Moment that contains itself
+(an infinite hall of mirrors, depth-capped). The whole nesting rides **inside the one token** — the record is
+the link, all the way down. It's an open-schema trait: older players ignore it and play the lone organism, so
+nothing breaks. See SPEC **§11⅞** and [`examples/nested-fractal.json`](examples/nested-fractal.json).
+
 ## Conformance in four lines
 
 You are `rapp-moment` conformant if you:
