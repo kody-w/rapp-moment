@@ -2,6 +2,9 @@
 
 # RAPP Moment — Specification
 
+
+> **Identity defers to `rapp-eternity/1.0` (the sole identity standard).** A Moment's rappid is the PKI-free SHA-256 **content-address** of its canonical body — **never** `sha256("moment:"+pk)` and **never** key-derived. The ECDSA P-256 keypair (and the zookeeper key) are an **OPTIONAL** sovereignty/ownership layer, **never required** to mint or own. The §6 key-derived minting rule is **superseded** by the content-address; the 'a key is an identity' principle is retracted (a key is an optional *ownership proof*, not the identity). See `kody-w/rapp-eternity/SPEC.md`.
+
 **Version 1.0 · status: living · part of the RAPP ecosystem**
 
 > **Own the moment.** Every instant in time mints one — and only one — living holographic organism. It breathes, it grows, and it is provably yours. Forever, from anywhere, with no server.
